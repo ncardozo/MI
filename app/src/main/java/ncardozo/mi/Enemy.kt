@@ -4,21 +4,20 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 
-class Intruder(var img : Bitmap) {
+class Enemy(private val img : Bitmap ) {
     var x = 0
     var y = 0
     var w = 0
     var h = 0
-    private var xVelocity = 20
-    private var yVelocity = 20
+    private var xVelocity = 10
     private var screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private var screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
     init {
         w = img.width
         h = img.height
-        x = screenWidth/2
-        y = screenHeight/2
+        x = screenHeight - img.width
+        y = screenWidth - (img.height * 2)
     }
 
     fun draw(canvas : Canvas) {
@@ -26,15 +25,8 @@ class Intruder(var img : Bitmap) {
     }
 
     fun update() {
-        if(x > screenWidth - img.width || x < img.width) {
-            xVelocity = xVelocity * -1
-        }
-        if(y > screenHeight - img.height || y < img.height) {
-            yVelocity = yVelocity * -1
-        }
-
-        x += (xVelocity)
-        y += (yVelocity)
+        x -= (xVelocity)
+        //y = touch_y - h / 2
     }
 
 }
