@@ -16,8 +16,8 @@ class Enemy(private val img : Bitmap ) {
     init {
         w = img.width
         h = img.height
-        x = screenHeight - img.width
-        y = screenWidth - (img.height * 2)
+        x = screenWidth + img.width
+        y = screenWidth/2 - img.height
     }
 
     fun draw(canvas : Canvas) {
@@ -25,8 +25,7 @@ class Enemy(private val img : Bitmap ) {
     }
 
     fun update() {
-        x -= (xVelocity)
-        //y = touch_y - h / 2
+        x += (xVelocity)
     }
 
 }

@@ -9,32 +9,23 @@ class Intruder(var img : Bitmap) {
     var y = 0
     var w = 0
     var h = 0
-    private var xVelocity = 20
-    private var yVelocity = 20
+
     private var screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private var screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
     init {
         w = img.width
         h = img.height
-        x = screenWidth/2
-        y = screenHeight/2
+        x = screenHeight/2
+        y = screenWidth/2 -  img.height
     }
 
     fun draw(canvas : Canvas) {
         canvas.drawBitmap(img, x.toFloat(), y.toFloat(), null)
     }
 
-    fun update() {
-        if(x > screenWidth - img.width || x < img.width) {
-            xVelocity = xVelocity * -1
-        }
-        if(y > screenHeight - img.height || y < img.height) {
-            yVelocity = yVelocity * -1
-        }
-
-        x += (xVelocity)
-        y += (yVelocity)
+    fun update(touched_y : Int) {
+        y += (touched_y)
     }
 
 }

@@ -25,7 +25,7 @@ class Surface(context: Context, attributes:AttributeSet) : SurfaceView(context, 
 
     override fun surfaceCreated(p0: SurfaceHolder?) {
         intruder = Intruder(BitmapFactory.decodeResource(resources, R.drawable.green))
-        enemy = Enemy(BitmapFactory.decodeResource(resources, R.drawable.cop_car))
+        enemy = Enemy(BitmapFactory.decodeResource(resources, R.drawable.copcar))
 
         thread.setRunning(true)
         thread.start()
@@ -49,9 +49,18 @@ class Surface(context: Context, attributes:AttributeSet) : SurfaceView(context, 
     }
 
     fun update() {
-        intruder!!.update()
-        //if(touched)
-            enemy!!.update()
+        enemy!!.update()
+        when(touched) {
+            true -> {
+                intruder!!.update(-10)
+                touched = false
+            }
+            false -> {
+                intruder!!.update(10)
+                touched = true
+            }
+        }
+
     }
 
     override fun draw(canvas : Canvas) {
@@ -61,18 +70,24 @@ class Surface(context: Context, attributes:AttributeSet) : SurfaceView(context, 
         enemy!!.draw(canvas)
     }
 
+    /*
     override fun onTouchEvent(event : MotionEvent) : Boolean {
-        touched_x = event.x.toInt()
-        touched_y = event.y.toInt()
 
         val action = event.action
         when(action) {
-            MotionEvent.ACTION_DOWN -> touched = true
-            MotionEvent.ACTION_MOVE -> touched = true
-            MotionEvent.ACTION_UP -> touched = false
+            MotionEvent.ACTION_DOWN -> {
+                touched = true
+                touched_y = 10
+            }
+            MotionEvent.ACTION_MOVE -> touched = false
+            MotionEvent.ACTION_UP -> {
+                touched = true
+                touched_y = -10
+            }
             MotionEvent.ACTION_CANCEL ->  touched = false
             MotionEvent.ACTION_OUTSIDE -> touched = false
         }
         return true
     }
+    */
 }
