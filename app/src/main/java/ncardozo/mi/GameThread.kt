@@ -39,7 +39,7 @@ class GameThread(private val surfaceHolder : SurfaceHolder, private val gameView
                 }
             }
 
-            timeMillis = (System.nanoTime() - startTime) / 1000
+            timeMillis = (System.nanoTime() - startTime) / 1000000
             waitTime = Math.abs(targetTime - timeMillis)
 
             try {

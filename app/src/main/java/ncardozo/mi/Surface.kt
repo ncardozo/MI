@@ -3,6 +3,8 @@ package ncardozo.mi
 import android.content.*
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -12,11 +14,15 @@ class Surface(context: Context, attributes:AttributeSet) : SurfaceView(context, 
 
     private val thread : GameThread
     private var intruder : Intruder? = null
-
     private var enemy : Enemy? = null
+
     private var touched = false
     private var touched_x = 0
     private var touched_y = 0
+
+    var score = 0
+
+    private var intruderColor = 1
 
     init {
         holder.addCallback(this)
@@ -50,44 +56,43 @@ class Surface(context: Context, attributes:AttributeSet) : SurfaceView(context, 
 
     fun update() {
         enemy!!.update()
-        when(touched) {
-            true -> {
-                intruder!!.update(-10)
-                touched = false
+        intruder!!.update(touched_y)
+        if (intruder!!.lifePower <= 0) {
+            when(intruderColor ) {
+                1 -> intruder = Intruder(BitmapFactory.decodeResource(resources, R.drawable.red))
+                2 -> intruder = Intruder(BitmapFactory.decodeResource(resources, R.drawable.yellow))
+                3 -> intruder = Intruder(BitmapFactory.decodeResource(resources, R.drawable.blue))
             }
-            false -> {
-                intruder!!.update(10)
-                touched = true
-            }
+            intruderColor.inc()
         }
 
     }
 
     override fun draw(canvas : Canvas) {
         super.draw(canvas)
+        var typeWritter = Paint()
+        typeWritter.setARGB(255, 255, 255 , 255)
+        typeWritter.textSize  = 30f
+        typeWritter.setTypeface(Typeface.SERIF)
+        canvas.drawText("points:" +score.toString(), 60.toFloat(), 60.toFloat(), typeWritter)
 
         intruder!!.draw(canvas)
         enemy!!.draw(canvas)
     }
 
-    /*
+
     override fun onTouchEvent(event : MotionEvent) : Boolean {
 
         val action = event.action
         when(action) {
             MotionEvent.ACTION_DOWN -> {
-                touched = true
-                touched_y = 10
+                touched_y = -40
             }
-            MotionEvent.ACTION_MOVE -> touched = false
-            MotionEvent.ACTION_UP -> {
-                touched = true
-                touched_y = -10
+            else -> {
+                touched_y = 0
             }
-            MotionEvent.ACTION_CANCEL ->  touched = false
-            MotionEvent.ACTION_OUTSIDE -> touched = false
         }
         return true
     }
-    */
+
 }
