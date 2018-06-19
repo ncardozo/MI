@@ -16,9 +16,7 @@ class Surface(context: Context, attributes:AttributeSet) : SurfaceView(context, 
     private var intruder : Intruder? = null
     private var enemy : Enemy? = null
 
-    private var touched = false
-    private var touched_x = 0
-    private var touched_y = 0
+    private var touchedY = 0
 
     var score = 0
 
@@ -56,9 +54,15 @@ class Surface(context: Context, attributes:AttributeSet) : SurfaceView(context, 
 
     fun update() {
         enemy!!.update()
-        intruder!!.update(touched_y)
+        intruder!!.update(touchedY)
+        if(((enemy!!.x - (enemy!!.w)/2) < (intruder!!.x + intruder!!.w/2) && (enemy!!.x - (enemy!!.w)/2) > (intruder!!.x - intruder!!.w/2) ||
+                (enemy!!.x + (enemy!!.w)/2) > (intruder!!.x - intruder!!.w/2) && (enemy!!.x + (enemy!!.w)/2) < (intruder!!.x - intruder!!.w/2)) &&
+                ((intruder!!.y - intruder!!.h/2) < (enemy!!.y + enemy!!.h/2))) {
+            intruder!!.lifePower -= 10
+        }
+
         if (intruder!!.lifePower <= 0) {
-            when(intruderColor ) {
+            when(intruderColor) {
                 1 -> intruder = Intruder(BitmapFactory.decodeResource(resources, R.drawable.red))
                 2 -> intruder = Intruder(BitmapFactory.decodeResource(resources, R.drawable.yellow))
                 3 -> intruder = Intruder(BitmapFactory.decodeResource(resources, R.drawable.blue))
@@ -70,11 +74,11 @@ class Surface(context: Context, attributes:AttributeSet) : SurfaceView(context, 
 
     override fun draw(canvas : Canvas) {
         super.draw(canvas)
-        var typeWritter = Paint()
-        typeWritter.setARGB(255, 255, 255 , 255)
-        typeWritter.textSize  = 30f
-        typeWritter.setTypeface(Typeface.SERIF)
-        canvas.drawText("points:" +score.toString(), 60.toFloat(), 60.toFloat(), typeWritter)
+        var typeWriter = Paint()
+        typeWriter.setARGB(255, 255, 255 , 255)
+        typeWriter.textSize  = 30f
+        typeWriter.typeface = Typeface.SERIF
+        canvas.drawText("points:" +score.toString(), 60.toFloat(), 60.toFloat(), typeWriter)
 
         intruder!!.draw(canvas)
         enemy!!.draw(canvas)
@@ -86,10 +90,10 @@ class Surface(context: Context, attributes:AttributeSet) : SurfaceView(context, 
         val action = event.action
         when(action) {
             MotionEvent.ACTION_DOWN -> {
-                touched_y = -40
+                touchedY = -40
             }
             else -> {
-                touched_y = 0
+                touchedY = 0
             }
         }
         return true
